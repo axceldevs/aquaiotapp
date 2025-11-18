@@ -5,20 +5,75 @@
     <title>AquaIoTApp</title>
     <link rel="stylesheet" href="libs/bootstrap.min.css">
     <link rel="stylesheet" href="css/styles.css">
+
+    <style>
+        /* Espacio superior para que el panel flotante no tape contenido en móvil */
+        @media (max-width: 768px) {
+            .content-wrapper {
+                margin-top: 260px !important;
+            }
+        }
+
+        @media (min-width: 769px) {
+            .content-wrapper {
+                margin-top: 20px;
+            }
+        }
+    </style>
 </head>
+
 <body class="bg-light">
 
-<div class="container py-4">
+<!-- === PANEL RESPONSIVE CENTRADO === -->
+<div class="mt-3 d-flex justify-content-center">
+    <div style="max-width: 280px; width: 100%;">
+        <div class="card shadow-lg border-0 p-3" style="border-radius: 18px;">
+
+            <h5 class="mb-3 text-center fw-bold">⚙️ Control Tiempo Real</h5>
+
+            <hr class="mt-0 mb-3">
+
+            <!-- Selector de intervalo -->
+            <label class="fw-semibold mb-2">⏱ Intervalo de actualización</label>
+            <select id="intervalSelector" class="form-select rounded-pill mb-3 shadow-sm">
+                <option value="1000">1 segundo</option>
+                <option value="2000">2 segundos</option>
+                <option value="3000" selected>3 segundos</option>
+                <option value="5000">5 segundos</option>
+                <option value="10000">10 segundos</option>
+            </select>
+
+            <!-- Botón ON/OFF -->
+            <button id="btnToggleRealtime"
+                    class="btn btn-success w-100 py-2 rounded-pill shadow-sm mb-3 fw-semibold">
+                ✔ Activar tiempo real
+            </button>
+
+            <!-- Estado -->
+            <div class="text-center mt-2">
+                <span id="realtimeStatus"
+                    class="badge text-bg-secondary px-3 py-2"
+                    style="font-size: 0.9rem;">
+                    Estado: Inactivo
+                </span>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- === CONTENIDO GENERAL === -->
+<div class="container content-wrapper py-4">
+
     <h1 class="text-center mb-4">Panel de Monitoreo IoT</h1>
 
     <div class="row g-4">
 
         <!-- TEMPERATURA -->
-        <div class="col-md-3">
+        <div class="col-12 col-sm-6 col-lg-3">
             <div class="card text-center p-3 shadow">
                 <h4>Temperatura (°C)</h4>
                 <h2 id="temperatureValue">--</h2>
-
                 <label class="form-switch mt-3">
                     <input type="checkbox" id="temperatureSwitch" onchange="toggleActuator('temperature', this.checked)">
                     <span class="slider"></span> Calentador
@@ -27,11 +82,10 @@
         </div>
 
         <!-- PH -->
-        <div class="col-md-3">
+        <div class="col-12 col-sm-6 col-lg-3">
             <div class="card text-center p-3 shadow">
                 <h4>pH</h4>
                 <h2 id="phValue">--</h2>
-
                 <label class="form-switch mt-3">
                     <input type="checkbox" id="switchPH" onchange="toggleActuator('ph', this.checked)">
                     <span class="slider"></span> Regulador pH
@@ -40,11 +94,10 @@
         </div>
 
         <!-- OXÍGENO -->
-        <div class="col-md-3">
+        <div class="col-12 col-sm-6 col-lg-3">
             <div class="card text-center p-3 shadow">
                 <h4>Oxígeno (mg/L)</h4>
                 <h2 id="oxygenValue">--</h2>
-
                 <label class="form-switch mt-3">
                     <input type="checkbox" id="switchOxygen" onchange="toggleActuator('oxygen', this.checked)">
                     <span class="slider"></span> Bomba Oxígeno
@@ -53,48 +106,50 @@
         </div>
 
         <!-- TURBIDEZ -->
-        <div class="col-md-3">
+        <div class="col-12 col-sm-6 col-lg-3">
             <div class="card text-center p-3 shadow">
                 <h4>Turbidez (NTU)</h4>
                 <h2 id="turbidityValue">--</h2>
-
                 <label class="form-switch mt-3">
                     <input type="checkbox" id="turbiditySwitch" onchange="toggleActuator('turbidity', this.checked)">
                     <span class="slider"></span> Filtro Agua
                 </label>
             </div>
         </div>
+
     </div>
 </div>
 
+<!-- === GRÁFICOS === -->
 <div class="container mt-5">
+
     <h2 class="text-center mb-4">Gráficos en Tiempo Real</h2>
 
     <div class="row g-4">
 
-        <div class="col-md-6">
+        <div class="col-12 col-md-6">
             <div class="card p-3 shadow">
                 <h5 class="text-center">Temperatura (°C)</h5>
                 <canvas id="chartTemp"></canvas>
             </div>
         </div>
 
-        <div class="col-md-6">
+        <div class="col-12 col-md-6">
             <div class="card p-3 shadow">
                 <h5 class="text-center">pH</h5>
                 <canvas id="chartPH"></canvas>
             </div>
         </div>
 
-        <div class="col-md-6">
-            <div class="card p-3 shadow mt-4">
+        <div class="col-12 col-md-6">
+            <div class="card p-3 shadow mt-4 mt-md-0">
                 <h5 class="text-center">Oxígeno Disuelto (mg/L)</h5>
                 <canvas id="chartOxygen"></canvas>
             </div>
         </div>
 
-        <div class="col-md-6">
-            <div class="card p-3 shadow mt-4">
+        <div class="col-12 col-md-6">
+            <div class="card p-3 shadow mt-4 mt-md-0">
                 <h5 class="text-center">Turbidez (NTU)</h5>
                 <canvas id="chartTurb"></canvas>
             </div>
@@ -102,41 +157,9 @@
 
     </div>
 </div>
-<div class="card shadow-lg border-0 p-3"
-     style="width: 270px; position: absolute; top: 20px; left: 20px; border-radius: 18px;">
-    
-    <h5 class="mb-3 text-center fw-bold">
-        ⚙️ Control Tiempo Real
-    </h5>
-    
-    <!-- Línea divisoria elegante -->
-    <hr class="mt-0 mb-3">
 
-    <!-- Selector de intervalo -->
-    <label class="fw-semibold mb-2">⏱ Intervalo de actualización</label>
-    <select id="intervalSelector" class="form-select rounded-pill mb-3 shadow-sm">
-        <option value="1000">1 segundo</option>
-        <option value="2000">2 segundos</option>
-        <option value="3000" selected>3 segundos</option>
-        <option value="5000">5 segundos</option>
-        <option value="10000">10 segundos</option>
-    </select>
-
-    <!-- Botón ON/OFF mejorado -->
-    <button id="btnToggleRealtime"
-            class="btn btn-success w-100 py-2 rounded-pill shadow-sm mb-3 fw-semibold">
-        ✔ Activar tiempo real
-    </button>
-
-    <!-- Estado con badge elegante -->
-    <div class="text-center mt-2">
-        <span id="realtimeStatus" class="badge text-bg-secondary px-3 py-2"
-              style="font-size: 0.9rem;">
-            Estado: Inactivo
-        </span>
-    </div>
-</div>
 <script src="libs/chart.js"></script>
 <script src="js/app.js"></script>
+
 </body>
 </html>
