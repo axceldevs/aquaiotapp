@@ -1,4 +1,4 @@
-const URL = "http://localhost:3000";
+const URL = "https://aquaiotapp.onrender.com";
 const TIME_INTERVAL = 30000; // 30 segundos
 const API = `${URL}/api/v1/sensors/all`;
 const API_COMMAND = `${URL}/api/v1/sensors/actuator/command`;
