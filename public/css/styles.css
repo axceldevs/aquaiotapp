@@ -1,0 +1,36 @@
+.form-switch {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.form-switch input {
+  width: 50px;
+  height: 25px;
+  appearance: none;
+  background: #ddd;
+  outline: none;
+  border-radius: 25px;
+  position: relative;
+  cursor: pointer;
+}
+
+.form-switch input:checked {
+  background: #0d6efd;
+}
+
+.form-switch input::before {
+  content: "";
+  width: 21px;
+  height: 21px;
+  background: white;
+  border-radius: 50%;
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  transition: 0.3s;
+}
+
+.form-switch input:checked::before {
+  left: 27px;
+}
